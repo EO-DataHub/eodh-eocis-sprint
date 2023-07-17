@@ -56,12 +56,31 @@ cd github/odc-service/scripts/db
 ./status.sh
 ```
 
+### setup databube.conf
+
+vi ~/.datacube.conf
+
+```
+[datacube]
+db_hostname: localhost
+db_database: odc
+db_username: dev
+index_driver: default
+
+[no_such_driver_env]
+index_driver: no_such_driver
+
+[null_driver]
+index_driver: null
+
+[local_memory]
+index_driver: memory
+```
+
 ### Initialise datacube
 
 ```bash
 conda activate odc_env
-cp github/odc-service/config/datacube.conf ~/.datacube.conf
-cd ~
 datacube -C ~/.datacube.conf system init
 ```
 
