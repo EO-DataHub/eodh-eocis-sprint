@@ -1,0 +1,67 @@
+{ 
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "stac_extensions": [
+        "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/view/v1.0.0/schema.json"
+      ],
+      "id": "S2B_1CCV_20181024_0_L2A",
+      "bbox": [
+        176.86465735875524,
+        -72.99279296292293,
+        178.43641743326884,
+        -72.0124876694908
+      ],
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              176.90894429752012,
+              -72.99279296292293
+            ],
+            [
+              176.86465735875524,
+              -72.99146546737437
+            ],
+            [
+              177.18936642547558,
+              -72.0124876694908
+            ],
+            [
+              178.43641743326884,
+              -72.04573464928163
+            ],
+            [
+              176.90894429752012,
+              -72.99279296292293
+            ]
+          ]
+        ]
+      },
+      "properties": {
+        "datetime": "2018-10-24T21:05:23Z",
+        "platform": "sentinel-2b",
+        "constellation": "sentinel-2",
+        "instruments": [
+          "msi"
+        ],
+        "gsd": 10,
+        "data_coverage": 20.3,
+        "view:off_nadir": 0,
+        "eo:cloud_cover": 18.48,
+        "proj:epsg": 32701,
+        "sentinel:latitude_band": "C",
+        "sentinel:grid_square": "CV",
+        "sentinel:sequence": "0",
+        "sentinel:product_id": "S2B_MSIL2A_20181024T210529_N0001_R071_T01CCV_20200307T173941",
+        "created": "2020-08-30T10:49:18.172Z",
+        "updated": "2020-08-30T10:49:18.172Z",
+        "sentinel:valid_cloud_cover": true,
+        "sentinel:utm_zone": 1,
+        "sentinel:data_coverage": 20.3
+      },
+      "collection": "sentinel-s2-l2a-cogs",
+      "assets": {}
+}

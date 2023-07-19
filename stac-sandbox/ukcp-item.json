@@ -1,0 +1,58 @@
+{ 
+      "type": "Feature",
+      "stac_version": "1.0.0",
+      "OLD_stac_extensions": [
+        "https://stac-extensions.github.io/eo/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
+        "https://stac-extensions.github.io/view/v1.0.0/schema.json"
+      ],
+      "stac_extensions": ["https://stac-extensions.github.io/datacube/v2.0.0/schema.json"],
+      "id": "ukcp-rcp85-tasmax",
+      "bbox": [-12.773760066441621, 49.31371471134698, 3.4064378554829906, 60.526678613029915],
+      "geometry": {
+        "type": "Polygon",
+        "bbox": [-12.773760066441621, 49.31371471134698, 3.4064378554829906, 60.526678613029915],
+        "coordinates": [
+          [
+            [-12.773760066441621, 49.31371471134698],
+            [3.4064378554829906, 49.31371471134698],
+            [3.4064378554829906, 60.526678613029915],
+            [-12.773760066441621, 60.526678613029915],
+            [-12.773760066441621, 49.31371471134698]
+          ]
+        ]
+      },
+      "assets": {
+          "tasmax": {
+              "href": "http://192.171.169.76/kerchunks/ukcp-5km-tasmax.json",
+              "ukcp:variable": "tasmax",
+              "type": "application/json",
+              "roles": ["references"]
+          }
+      },
+      "collection": "ukcp",
+      "properties": {
+        "start_datetime": "1980-12-01T12:00:00", 
+        "end_datetime": "2080-11-30T12:00:00",
+        "proj:epsg": 32701,
+        "ukcp:collection": "land-cpm",
+        "contact": "ukcpproject@metoffice.gov.uk",
+        "creation_date": "2021-06-09T16:58:11",
+        "domain": "uk",
+        "frequency": "day",
+        "institution": "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK.",
+        "institution_id": "MOHC",
+        "project": "UKCP18",
+        "references": "https://ukclimateprojections.metoffice.gov.uk",
+        "ukcp:resolution": "5km",
+        "scenario": "rcp85",
+        "source": "UKCP18 realisation from a set of 12 convection-permitting models (HadREM3-RA11M) driven by perturbed variants of the Met Office Unified Model Global Atmosphere GA7 model (HadREM3-GA705) at 12km resolution.  The HadREM3-GA705 models were driven by perturbed variants of the global HadGEM3-GC3.05",
+        "title": "UKCP18 land projections - Regridded 2.2km convection-permitting climate model results on 5km British National Grid from Ordnance Survey (OSGB), Maximum air temperature over the UK for the RCP8.5 scenario",
+        "version": "v20210615",
+        "netcdf:Conventions": "CF-1.7",
+        "created": "2023-08-30T10:49:18.172Z",
+        "updated": "2023-08-30T10:49:18.172Z",
+        "eo:cloud_cover": 18.48,
+        "datetime": "2030-12-01T12:00:00"
+      }
+}
