@@ -8,7 +8,7 @@ FORMAT = 'NetCDFX'
 
 class NetcdfReaderDriverX(object):
     def __init__(self):
-        print("NetcdfReaderDriverXXX")
+        print("NetcdfReaderDriverX")
         self.name = 'NetcdfReader'
         self.protocols = [PROTOCOL]
         self.formats = [FORMAT]

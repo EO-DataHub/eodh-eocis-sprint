@@ -25,6 +25,8 @@ from datacube.storage._hdf5 import HDF5_LOCK
 
 _LOG = logging.getLogger(__name__)
 
+scale = 0.01
+offset = 273.15
 
 def _rasterio_crs(src):
     if src.crs is None:
@@ -81,7 +83,8 @@ class BandDataSource(GeoRasterReader):
         """Read data in the native format, returning a numpy array
         """
         with maybe_lock(self._lock):
-            return self.source.ds.read(indexes=self.source.bidx, window=window, out_shape=out_shape)
+            a = self.source.ds.read(indexes=self.source.bidx, window=window, out_shape=out_shape)
+            return a*scale + offset
 
 
 class RasterioDataSource(DataSource):
