@@ -1,0 +1,25 @@
+---
+name: sstx
+description: Sea Surface Temperature
+metadata_type: eo
+
+license: CC-BY-4.0
+
+metadata:
+  product:
+    name: sstx
+
+storage:
+  crs: "EPSG:4326"
+  resolution:
+    longitude: 0.05
+    latitude: -0.05
+
+measurements:
+  - name: analysed_sst
+    aliases: []
+    units: "kelvin"
+    dtype: float32
+    nodata: NaN
+    scale_factor: 0.01
+    add_offset: 273.15

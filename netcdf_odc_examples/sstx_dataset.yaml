@@ -1,0 +1,32 @@
+id: 6a219330-886a-4d61-a55c-21d1223d2712
+creation_dt: '2023-01-01T12:00:00'
+product: { name: sstx }
+product_type: sstx
+platform: {code: bbb}
+instrument: {name: ccc}
+format: {name: NetCDFX}
+extent:
+  coord:
+    ll: {lat: -90, lon: -180}
+    lr: {lat: -90, lon: 180}
+    ul: {lat: 90, lon: -180}
+    ur: {lat: 90, lon: 180}
+  from_dt: '2022-01-01T12:00:00'
+  center_dt: '2022-01-01T12:00:00'
+  to_dt: '2022-01-01T12:00:00'
+grid_spatial:
+  projection:
+    geo_ref_points:
+      ll: {x: -180, y: -90}
+      lr: {x: 180, y: -90}
+      ul: {x: -180, y: 90}
+      ur: {x: 180, y: 90}
+    spatial_reference: "EPSG:4326"
+image:
+  bands:
+    analysed_sst:
+      path: /root/odc_sst/20220101120000-C3S-L4_GHRSST-SSTdepth-OSTIA-GLOB_ICDR3.0-v02.0-fv01.0.nc
+      layer: "analysed_sst"
+lineage:
+  source_datasets: {}
+
