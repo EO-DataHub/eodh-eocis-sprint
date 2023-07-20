@@ -10,7 +10,8 @@
       {"rel":"root","href":"http://localhost:8000/"},
       {"rel":"items","href":"http://localhost:8000/collections/ukcp/items"}
   ],
-  "stac_extensions":["https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"],
+  "OLDstac_extensions":["https://stac-extensions.github.io/item-assets/v1.0.0/schema.json"],
+  "stac_extensions":[],
   "title":"UK Climate Projections",
   "keywords":["ukcp","climate","met office","projections","uk"],
   "providers":[

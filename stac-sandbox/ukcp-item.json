@@ -6,7 +6,8 @@
         "https://stac-extensions.github.io/projection/v1.0.0/schema.json",
         "https://stac-extensions.github.io/view/v1.0.0/schema.json"
       ],
-      "stac_extensions": ["https://stac-extensions.github.io/datacube/v2.0.0/schema.json"],
+      "OLDYstac_extensions": ["https://stac-extensions.github.io/datacube/v2.0.0/schema.json"],
+      "stac_extensions": [],
       "id": "ukcp-rcp85-tasmax",
       "bbox": [-12.773760066441621, 49.31371471134698, 3.4064378554829906, 60.526678613029915],
       "geometry": {
@@ -27,13 +28,16 @@
               "href": "http://192.171.169.76/kerchunks/ukcp-5km-tasmax.json",
               "ukcp:variable": "tasmax",
               "type": "application/json",
-              "roles": ["references"]
+              "roles": ["references"],
+              "start_datetime": "1980-12-01T12:00:00",
+              "end_datetime": "2080-11-30T12:00:00",
+              "created": "2021-06-09T16:58:11"
           }
       },
       "collection": "ukcp",
       "properties": {
-        "start_datetime": "1980-12-01T12:00:00", 
-        "end_datetime": "2080-11-30T12:00:00",
+        "start_datetime": "1980-12-01T12:00:00+00:00", 
+        "end_datetime": "2080-11-30T12:00:00+00:00",
         "proj:epsg": 32701,
         "ukcp:collection": "land-cpm",
         "contact": "ukcpproject@metoffice.gov.uk",
@@ -53,6 +57,6 @@
         "created": "2023-08-30T10:49:18.172Z",
         "updated": "2023-08-30T10:49:18.172Z",
         "eo:cloud_cover": 18.48,
-        "datetime": "2030-12-01T12:00:00"
+        "datetime": "2030-12-01T12:00:00+00:00"
       }
 }

@@ -14,7 +14,7 @@ collection_id = collection["id"]
 with open(item_file) as f:
     item = json.load(f)
 
-#resp = requests.post(f"{service}/collections", json=collection)
+resp = requests.post(f"{service}/collections", json=collection)
 resp = requests.post(f"{service}/collections/{collection_id}/items", json=item)
 
 #import time
