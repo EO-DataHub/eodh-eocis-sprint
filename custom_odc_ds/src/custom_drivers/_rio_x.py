@@ -5,6 +5,7 @@
 """
 Driver implementation for Rasterio based reader.
 """
+import datetime
 import logging
 import contextlib
 from contextlib import contextmanager
@@ -38,6 +39,18 @@ def maybe_lock(lock):
         return contextlib.suppress()
     return lock
 
+climatology_template_path = "NetCDF:/data/esacci_sst/public/CDR2.1_release/Climatology/L4/v2.1/D%03d-ESACCI-L4_GHRSST-SSTdepth-OSTIA-GLOB_CDR2.1-v02.0-fv01.0.nc:analysed_sst"
+
+def get_doy(filename):
+    splits = filename.split("/")
+    y = splits[-4]
+    m = splits[-3]
+    d = splits[-2]
+    dt = datetime.date(int(y),int(m),int(d))
+    doy = dt.timetuple().tm_yday
+    if doy == 366:
+        doy = 365
+    return doy
 
 class BandDataSource(GeoRasterReader):
     """
@@ -47,8 +60,9 @@ class BandDataSource(GeoRasterReader):
     """
 
     def __init__(self, source, nodata=None,
-                 lock: Optional[RLock] = None):
+                 lock: Optional[RLock] = None, source_climatology=None):
         self.source = source
+        self.source_climatology = source_climatology
         if nodata is None:
             nodata = self.source.ds.nodatavals[self.source.bidx-1]
 
@@ -84,7 +98,18 @@ class BandDataSource(GeoRasterReader):
             scale = self.source.ds.scales[0]
             offset = self.source.ds.offsets[0]
             a = self.source.ds.read(indexes=self.source.bidx, window=window, out_shape=out_shape)
-            return a*scale + offset
+            out = a*scale + offset
+
+            if self.source_climatology:
+                c_scale = self.source_climatology.ds.scales[0]
+                c_offset = self.source_climatology.ds.offsets[0]
+                c = self.source_climatology.ds.read(indexes=self.source_climatology.bidx, window=window, out_shape=out_shape)
+                c = c*c_scale + c_offset
+                print("c",c)
+                out = out - c
+                print("out",out)
+
+            return out
 
 
 class RasterioDataSource(DataSource):
@@ -137,13 +162,21 @@ class RasterioDataSource(DataSource):
                 nodata = src.nodatavals[band.bidx-1] if src.nodatavals[band.bidx-1] is not None else self.nodata
                 nodata = num2numpy(nodata, band.dtype)
 
+                # get the day of year
+                doy = get_doy(str(self.filename))
+
                 if locked:
                     locked = False
                     lock.release()
 
                 if override:
                     raise RuntimeError(f'Broken/missing geospatial data was found in file "{self.filename}"')
-                yield BandDataSource(band, nodata=nodata, lock=lock)
+
+                clim_path = climatology_template_path%doy
+                
+                with rasterio.open(clim_path, sharing=False) as src_clim:
+                    band_clim = rasterio.band(src_clim, bandnumber)
+                    yield BandDataSource(band, nodata=nodata, lock=lock, source_climatology=band_clim)
 
         except Exception as e:
             _LOG.error("Error opening source dataset: %s", self.filename)
