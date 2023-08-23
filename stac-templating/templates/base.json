@@ -1,0 +1,13 @@
+{
+    "Standards": ["CEDA record", "STAC", "etc"],
+    "Collection": "{{ collection }}",
+    "properties": {    {% block properties %}{% endblock properties %}
+    },
+    "bbox": {{ content.bbox() }},
+    "variables": {{ content.variables() }},
+    "assets": { {% for asset_href in content.assets %}
+        {"roles": ["data"], "href": "{{ asset_href }}"}{% if asset_href != content.assets|last %},{% endif %}
+        {%- endfor -%}
+
+    }
+}

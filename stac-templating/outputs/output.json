@@ -1,0 +1,21 @@
+{
+    "Standards": ["CEDA record", "STAC", "etc"],
+    "Collection": "Sentinel 2",
+    "properties": {    
+        "platform": "sentinel2a",
+        "sensor": "s1str"
+    },
+    "bbox": [-20.0, -20.0, 10.0, 15.0],
+    "variables": ['temperature', 'rainfall', 'nir', 'red', 'green', 'blue'],
+    "assets": { 
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/126.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/151.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/111.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/112.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/175.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/135.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/115.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/164.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/142.jpg"},
+        {"roles": ["data"], "href": "https://ceda.ac.uk/data/152.jpg"}}
+}

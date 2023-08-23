@@ -1,0 +1,6 @@
+{% extends "base.json" %}
+{%- block properties -%}
+    {% for key, value in content.props|dictsort %}
+        "{{ key }}": "{{ content.props[key] }}"{% if key != content.props|dictsort|last|first %},{% endif %}
+    {%- endfor -%}
+{%- endblock properties -%}

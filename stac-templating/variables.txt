@@ -1,0 +1,6 @@
+temperature
+rainfall
+nir
+red
+green
+blue
