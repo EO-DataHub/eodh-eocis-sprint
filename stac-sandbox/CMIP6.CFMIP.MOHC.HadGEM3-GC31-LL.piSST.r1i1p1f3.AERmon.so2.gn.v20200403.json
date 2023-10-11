@@ -1,0 +1,73 @@
+{
+    "properties": {
+        "activity_id": "CFMIP",
+        "data_specs_version": "01.00.29",
+        "experiment_id": "piSST",
+        "experiment_title": "experiment forced with pre-industrial SSTs, sea ice and atmospheric constituents",
+        "frequency": "mon",
+        "further_info_url": "https://furtherinfo.es-doc.org/CMIP6.MOHC.HadGEM3-GC31-LL.piSST.none.r1i1p1f3",
+        "grid": "Native N96 grid; 192 x 144 longitude/latitude",
+        "grid_label": "gn",
+        "institution_id": "MOHC",
+        "mip_era": "CMIP6",
+        "nominal_resolution": "250 km",
+        "source_id": "HadGEM3-GC31-LL",
+        "source_type": "AGCM AER",
+        "sub_experiment_id": null,
+        "table_id": "AERmon",
+        "variable_id": "so2",
+        "variant_label": "r1i1p1f3",
+        "access": [
+            "HTTPServer"
+        ],
+        "index_node": null,
+        "latest": true,
+        "pid": null,
+        "replica": false,
+        "retracted": false,
+        "variable_long_name": "SO2 Volume Mixing Ratio",
+        "variable_units": "mol mol-1",
+        "cf_standard_name": "mole_fraction_of_sulfur_dioxide_in_air",
+        "instance_id": "CMIP6.CFMIP.MOHC.HadGEM3-GC31-LL.piSST.r1i1p1f3.AERmon.so2.gn.v20200403",
+        "citation_url": "http://cera-www.dkrz.de/WDCC/meta/CMIP6/CMIP6.CFMIP.MOHC.HadGEM3-GC31-LL.piSST.r1i1p1f3.AERmon.so2.gn.v20200403.json"
+    },
+    "bbox": [
+        0.9375,
+        -89.375,
+        359.0625,
+        89.375
+    ],
+    "start_datetime": "1960-01-16T00:00:00",
+    "end_datetime": "1989-12-16T00:00:00",
+    "level": [
+        19.999998092651367,
+        85000.0
+    ],
+    "kerchunk_uri": "https://kerchunk.ceda.ac.uk/CMIP6.CFMIP.MOHC.HadGEM3-GC31-LL.piSST.r1i1p1f3.AERmon.so2.gn.v20200403.json",
+    "file_count": 1,
+    "total_size": 2412883013,
+    "version": "v20200403",
+    "assets": {
+        "so2_AERmon_HadGEM3-GC31-LL_piSST_r1i1p1f3_gn_196001-198912.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/CFMIP/MOHC/HadGEM3-GC31-LL/piSST/r1i1p1f3/AERmon/so2/gn/v20200403/so2_AERmon_HadGEM3-GC31-LL_piSST_r1i1p1f3_gn_196001-198912.nc",
+            "size": 2412883013,
+            "area": [
+                0.9375,
+                -89.375,
+                359.0625,
+                89.375
+            ],
+            "time": "1960-01-01T00:00:00/1989-12-31T23:59:59",
+            "level": [
+                19.999998092651367,
+                85000.0
+            ],
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        }
+    }
+}
