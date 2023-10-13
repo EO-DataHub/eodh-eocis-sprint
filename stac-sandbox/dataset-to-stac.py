@@ -25,7 +25,7 @@ from dset_stac_configs import configs
 
 
 SERVICE_URL = "https://dap.ceda.ac.uk"
-KERCHUNK_URL = "https://kerchunk.ceda.ac.uk"
+KERCHUNK_URL = "https://dap.ceda.ac.uk"
 
 
 def expand_timestring(t, end=False):

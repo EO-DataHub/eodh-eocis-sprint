@@ -25,8 +25,14 @@ configs = {
 
   "cmip6": {
     "base_dir": "/badc/cmip6/data",
+    "metadata_dir": "/badc/cmip6/metadata",
     "dset_id_name": "instance_id",
     "var_id_index_in_dset_id": -3,
+    "kerchunk": {
+      "dir_depth": {
+        "by_dset": 6
+      },
+    },
     "defaults": {
       "item": {
         "access": ["HTTPServer"],
