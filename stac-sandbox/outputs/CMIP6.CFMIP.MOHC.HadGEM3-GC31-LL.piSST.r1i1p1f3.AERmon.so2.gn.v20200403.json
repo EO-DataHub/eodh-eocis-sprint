@@ -43,11 +43,27 @@
         19.999998092651367,
         85000.0
     ],
-    "kerchunk_uri": "https://kerchunk.ceda.ac.uk/CMIP6.CFMIP.MOHC.HadGEM3-GC31-LL.piSST.r1i1p1f3.AERmon.so2.gn.v20200403.json",
-    "file_count": 1,
-    "total_size": 2412883013,
+    "file_count": 2,
+    "total_size": 2413131955,
     "version": "v20200403",
+    "access_control": {
+        "rule": "open",
+        "roles": []
+    },
     "assets": {
+        "reference_file": {
+            "checksum": "8b446eefdd2b4e99e9d958f38f3d7ba6380309b2119b3d947b4d641566d275aa",
+            "checksum_type": "SHA256",
+            "href": "https://dap.ceda.ac.uk/badc/cmip6/metadata/kerchunk/by_dset/CMIP6/CFMIP/MOHC/HadGEM3-GC31-LL/piSST/r1i1p1f3/CMIP6.CFMIP.MOHC.HadGEM3-GC31-LL.piSST.r1i1p1f3.AERmon.so2.gn.v20200403.zstd",
+            "roles": [
+                "reference"
+            ],
+            "size": 248942,
+            "type": "application/zstd",
+            "open_zarr_kwargs": {
+                "decode_times": true
+            }
+        },
         "so2_AERmon_HadGEM3-GC31-LL_piSST_r1i1p1f3_gn_196001-198912.nc": {
             "href": "https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/CFMIP/MOHC/HadGEM3-GC31-LL/piSST/r1i1p1f3/AERmon/so2/gn/v20200403/so2_AERmon_HadGEM3-GC31-LL_piSST_r1i1p1f3_gn_196001-198912.nc",
             "size": 2412883013,

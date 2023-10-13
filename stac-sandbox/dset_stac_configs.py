@@ -1,7 +1,23 @@
 configs = {
+  "DEFAULTS": {
+    "access_control": {
+      "rule": "restricted",
+      "roles": ["reguser"]
+    }
+  },
 
   "ukcp": {
     "base_dir": "/badc/ukcp18/data",
+    "access_control": {
+       "rule": "open",
+       "roles": [],
+    },
+    "metadata_dir": "/badc/ukcp18/metadata",
+    "kerchunk": {
+      "dir_depth": {
+        "by_dset": 4
+      },
+    },
     "dset_id_name": "dataset_id",
     "var_id_index_in_dset_id": -3,
     "dset_id_prefix": "ukcp.",
@@ -25,6 +41,10 @@ configs = {
 
   "cmip6": {
     "base_dir": "/badc/cmip6/data",
+    "access_control": {
+       "rule": "open",
+       "roles": [],
+    },
     "metadata_dir": "/badc/cmip6/metadata",
     "dset_id_name": "instance_id",
     "var_id_index_in_dset_id": -3,
@@ -62,6 +82,16 @@ configs = {
 
   "cordex": {
     "base_dir": "/badc/cordex/data",
+    "access_control": {
+       "rule": "restricted",
+       "roles": ["cordex"],
+    },
+    "metadata_dir": "/badc/cordex/metadata",
+    "kerchunk": {
+      "dir_depth": {
+        "by_dset": 5
+      },
+    },
     "dset_id_name": "instance_id",
     "var_id_index_in_dset_id": -2,
     "defaults": {

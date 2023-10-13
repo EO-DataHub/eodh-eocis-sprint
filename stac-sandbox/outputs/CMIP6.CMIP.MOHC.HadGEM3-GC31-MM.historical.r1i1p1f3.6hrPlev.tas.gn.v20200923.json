@@ -40,11 +40,27 @@
     "start_datetime": "1850-01-01T03:00:00",
     "end_datetime": "2014-12-30T21:00:00",
     "level": null,
-    "kerchunk_uri": "https://kerchunk.ceda.ac.uk/CMIP6.CMIP.MOHC.HadGEM3-GC31-MM.historical.r1i1p1f3.6hrPlev.tas.gn.v20200923.json",
-    "file_count": 165,
-    "total_size": 65011336512,
+    "file_count": 166,
+    "total_size": 65011585454,
     "version": "v20200923",
+    "access_control": {
+        "rule": "open",
+        "roles": []
+    },
     "assets": {
+        "reference_file": {
+            "checksum": "ff00d59d9393b4467f3e164d6addca40a5205cb2a9b8a9ebe492712b56c8ee1d",
+            "checksum_type": "SHA256",
+            "href": "https://dap.ceda.ac.uk/badc/cmip6/metadata/kerchunk/by_dset/CMIP6/CMIP/MOHC/HadGEM3-GC31-MM/historical/r1i1p1f3/CMIP6.CMIP.MOHC.HadGEM3-GC31-MM.historical.r1i1p1f3.6hrPlev.tas.gn.v20200923.zstd",
+            "roles": [
+                "reference"
+            ],
+            "size": 248942,
+            "type": "application/zstd",
+            "open_zarr_kwargs": {
+                "decode_times": true
+            }
+        },
         "tas_6hrPlev_HadGEM3-GC31-MM_historical_r1i1p1f3_gn_185001010300-185012302100.nc": {
             "href": "https://dap.ceda.ac.uk/badc/cmip6/data/CMIP6/CMIP/MOHC/HadGEM3-GC31-MM/historical/r1i1p1f3/6hrPlev/tas/gn/v20200923/tas_6hrPlev_HadGEM3-GC31-MM_historical_r1i1p1f3_gn_185001010300-185012302100.nc",
             "size": 393967646,

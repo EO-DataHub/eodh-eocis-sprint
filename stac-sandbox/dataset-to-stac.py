@@ -15,6 +15,7 @@ Dependencies:
 import sys
 import os
 import glob
+import hashlib
 import json
 
 import xarray as xr
@@ -22,10 +23,11 @@ import cf_xarray as cfxr
 
 sys.path.append(".")
 from dset_stac_configs import configs
-
+DEFAULTS = configs["DEFAULTS"]
 
 SERVICE_URL = "https://dap.ceda.ac.uk"
 KERCHUNK_URL = "https://dap.ceda.ac.uk"
+OUTPUTS_DIR = "./outputs"
 
 
 def expand_timestring(t, end=False):
@@ -63,6 +65,7 @@ def floats(seq):
 
 def proj_from_path(fpath, return_config=False):
     for proj, content in configs.items():
+        if proj == "DEFAULTS": continue
         if fpath.startswith(content["base_dir"]): 
             if return_config:
                 return configs[proj]
@@ -142,6 +145,43 @@ def dir_to_dset_id(dr):
            dr.replace(config["base_dir"], "").strip("/").replace("/", ".") + \
            config.get("dset_id_suffix", "")
 
+def get_a_or_b(key, a, b):
+    "Get item from `key` in dict `a`, or `b`."
+    return a.get(key, b[key])
+
+
+def get_access_control(config):
+    ac = "access_control"
+    dfac = DEFAULTS[ac]
+    dsac = config.get(ac, dfac)
+
+    return {   # because the same for all Assets in this Item
+      "rule": get_a_or_b("rule", dsac, dfac),
+      "roles": get_a_or_b("roles", dsac, dfac)
+    }
+
+
+def sha256(fpath):
+    # fake hack to not fail if file doesn't exist
+    content = open(fpath, "rb").read() if os.path.isfile(fpath) else fpath.encode("utf-8")
+    return hashlib.sha256(content).hexdigest()
+
+def get_kerchunk_asset(dset_id, dr, config):
+    extra_dirs = "/".join(dset_id.split(".")[:config['kerchunk']['dir_depth']['by_dset']])
+    kc_path = f"{config['metadata_dir']}/kerchunk/by_dset/{extra_dirs}/{dset_id}.zstd"
+    kc_uri = f"{KERCHUNK_URL}{kc_path}"
+
+    return {"reference_file":
+       {"checksum": sha256(kc_path),
+        "checksum_type": "SHA256",
+        "href": kc_uri,
+        "roles": ["reference"],
+        "size": os.path.getsize(kc_path) if os.path.isfile(kc_path) else 248942,
+        "type": "application/zstd",
+        "open_zarr_kwargs": {"decode_times": True}
+       }
+    }
+      
 
 def get_item_dict(spec):
     if os.path.isdir(spec):
@@ -164,7 +204,11 @@ def get_item_dict(spec):
     # Get bbox and level first so that we can insert them into the assets
     bbox = ff.get_bbox()
     level = ff.get_level()
-    assets = {os.path.basename(fpath): get_asset_dict(fpath, bbox, level) for fpath in fpaths}
+
+    # Build asset list - start with kerchunk asset
+    assets = get_kerchunk_asset(dset_id, dr, config)
+    # Add normal file assets
+    assets.update( {os.path.basename(fpath): get_asset_dict(fpath, bbox, level) for fpath in fpaths} )
 
     d = {
         "properties": ff.get_properties(),
@@ -172,10 +216,10 @@ def get_item_dict(spec):
         "start_datetime": ff.get_datetime(0),
         "end_datetime": fl.get_datetime(-1),
         "level": level,
-        "kerchunk_uri": f"{KERCHUNK_URL}/{dset_id}.json",
         "file_count": len(assets), 
         "total_size": sum([asset["size"] for asset in assets.values()]),
         "version": version_from_dir(dr),
+        "access_control": get_access_control(config),
         "assets": assets
     }
 
@@ -198,7 +242,7 @@ def version_from_dir(dr):
 
 def main(spec):
     dset_id, item = get_item_dict(spec)
-    dset_item_file = f"{dset_id}.json"
+    dset_item_file = f"{OUTPUTS_DIR}/{dset_id}.json"
     
     with open(dset_item_file, "w") as writer:
         json.dump(item, writer, indent=4, sort_keys=False)

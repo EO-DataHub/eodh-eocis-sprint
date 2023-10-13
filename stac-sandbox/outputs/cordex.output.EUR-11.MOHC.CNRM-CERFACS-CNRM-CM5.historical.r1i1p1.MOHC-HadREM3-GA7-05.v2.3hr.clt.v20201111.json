@@ -35,11 +35,29 @@
     "start_datetime": "1951-12-01T01:30:00",
     "end_datetime": "2010-12-31T22:30:00",
     "level": null,
-    "kerchunk_uri": "https://kerchunk.ceda.ac.uk/cordex.output.EUR-11.MOHC.CNRM-CERFACS-CNRM-CM5.historical.r1i1p1.MOHC-HadREM3-GA7-05.v2.3hr.clt.v20201111.json",
-    "file_count": 60,
-    "total_size": 41409262943,
+    "file_count": 61,
+    "total_size": 41409511885,
     "version": "v20201111",
+    "access_control": {
+        "rule": "restricted",
+        "roles": [
+            "cordex"
+        ]
+    },
     "assets": {
+        "reference_file": {
+            "checksum": "dfe75997b2db33e74d606e5a08c1e33f063e10004805b90682111e95fdfe291f",
+            "checksum_type": "SHA256",
+            "href": "https://dap.ceda.ac.uk/badc/cordex/metadata/kerchunk/by_dset/cordex/output/EUR-11/MOHC/CNRM-CERFACS-CNRM-CM5/cordex.output.EUR-11.MOHC.CNRM-CERFACS-CNRM-CM5.historical.r1i1p1.MOHC-HadREM3-GA7-05.v2.3hr.clt.v20201111.zstd",
+            "roles": [
+                "reference"
+            ],
+            "size": 248942,
+            "type": "application/zstd",
+            "open_zarr_kwargs": {
+                "decode_times": true
+            }
+        },
         "clt_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_MOHC-HadREM3-GA7-05_v2_3hr_195112010130-195112312230.nc": {
             "href": "https://dap.ceda.ac.uk/badc/cordex/data/cordex/output/EUR-11/MOHC/CNRM-CERFACS-CNRM-CM5/historical/r1i1p1/MOHC-HadREM3-GA7-05/v2/3hr/clt/v20201111/clt_EUR-11_CNRM-CERFACS-CNRM-CM5_historical_r1i1p1_MOHC-HadREM3-GA7-05_v2_3hr_195112010130-195112312230.nc",
             "size": 59311468,
