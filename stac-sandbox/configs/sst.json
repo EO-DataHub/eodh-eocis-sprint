@@ -1,0 +1,34 @@
+{
+    "variable": "analysed_sst",
+    "dataset_id": "???",
+    "base_dir": "/home/dev/data/regrid",
+    "access_control": {
+       "rule": "open",
+       "roles": []
+    },
+    "metadata_dir": "/home/dev/data/regrid/sst-metadata/",
+    "kerchunk": {
+      "dir_depth": {
+        "by_dset": 4
+      }
+    },
+    "dset_id_name": "dataset_id",
+    "var_id_index_in_dset_id": -3,
+    "dset_id_prefix": "ukcp.",
+    "defaults": {
+      "item": {
+        "latest": true
+      },
+      "asset": {
+        "checksum": null,
+        "checksum_type": null,
+        "type": "application/netcdf",
+        "roles": ["data"]
+      }
+    },
+    "global_attrs": ["collection", "domain", "frequency", "institution",
+                     "institution_id", "project", "references", "resolution", "scenario",
+                     "version", "Conventions"],
+    "global_attr_map": {},
+    "templated_properties": {}
+}

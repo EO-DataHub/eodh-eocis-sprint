@@ -46,7 +46,7 @@ def time_from_fname(fname):
     return "/".join(time_comps)
  
 
-def get_asset_dict(fpath, bbox, level):
+def get_asset_dict(fpath, bbox, level, config=None):
     d = {
         "href": f"{SERVICE_URL}{fpath}",
         "size": os.path.getsize(fpath),
@@ -55,7 +55,8 @@ def get_asset_dict(fpath, bbox, level):
         "level": level
     }  
 
-    config = config_from_path(fpath)
+    if config is None:
+        config = config_from_path(fpath)
     d.update(config["defaults"]["asset"])
     return d
 
@@ -78,8 +79,8 @@ def config_from_path(fpath):
 
 
 class NCFileInspector:
-    def __init__(self, fpath, var_id):
-        self.config = config_from_path(fpath)
+    def __init__(self, fpath, var_id, config=None):
+        self.config = config if config else config_from_path(fpath)
         self.ds = xr.open_dataset(fpath)
         self.var_id = var_id
         self.var = self.ds[var_id]
@@ -195,7 +196,7 @@ def get_item_dict(spec):
         while not os.path.isdir(dr): dr = os.path.dirname(dr)
  
     config = config_from_path(dr)
-    var_id = var_from_dir(dr, config)
+    var_id = "analysed_sst" # var_from_dir(dr, config)
     dset_id = dir_to_dset_id(dr)
 
     # ff and fl are file:first and file:last
@@ -250,26 +251,96 @@ def main(spec):
     print(f"Wrote STAC Item file to: {dset_item_file}")
     return item 
 
+class Netcdf2Stac:
+
+    def __init__(self, input_path, config_path, output_path):
+        self.input_path = input_path
+        self.config_path = config_path
+        self.output_path = output_path
+
+        with open(self.config_path) as f:
+            self.config = json.loads(f.read())
+
+    def run(self):
+
+        if os.path.isdir(self.input_path):
+            fnames = sorted(os.listdir(self.input_path))
+            fpaths = [os.path.join(self, fname) for fname in fnames]
+        else:
+            fpaths = [self.input_path]
+
+        var_id = self.config["variable"]
+        dset_id = self.config["dataset_id"]
+
+        # ff and fl are file:first and file:last
+        ff, fl = [NCFileInspector(fpath, var_id, self.config) for fpath in [fpaths[0], fpaths[-1]]]
+
+        # Get bbox and level first so that we can insert them into the assets
+        bbox = ff.get_bbox()
+        level = ff.get_level()
+
+        # Build asset list - start with kerchunk asset
+        assets = get_kerchunk_asset(dset_id, self.input_path, self.config)
+        # Add normal file assets
+        assets.update({os.path.basename(fpath): get_asset_dict(fpath, bbox, level, self.config) for fpath in fpaths})
+
+        d = {
+            "properties": ff.get_properties(),
+            "bbox": bbox,
+            "start_datetime": ff.get_datetime(0),
+            "end_datetime": fl.get_datetime(-1),
+            "level": level,
+            "file_count": len(assets),
+            "total_size": sum([asset["size"] for asset in assets.values()]),
+            "version": version_from_dir(self.input_path),
+            "access_control": get_access_control(self.config),
+            "assets": assets
+        }
+
+        # Add dataset ID
+        d["properties"][self.config["dset_id_name"]] = dset_id
+
+        # Add templated properties
+        for prop, tmpl in self.config["templated_properties"].items():
+            d["properties"][prop] = tmpl.format(**vars())
+
+        with open(self.output_path,"w") as f:
+            f.write(json.dumps(d))
+
+
+def netcdf2stac():
+
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input_path",help="path to netcdf4 file or folder")
+    parser.add_argument("config_path", help="path to JSON configuration file")
+    parser.add_argument("output_path", help="path to output stac file")
+
+    args = parser.parse_args()
+    converter = Netcdf2Stac(args.input_path, args.config_path, args.output_path)
+    converter.run()
 
 if __name__ == "__main__":
 
-    import pprint, time
-    spec1 = "/badc/ukcp18/data/land-cpm/uk/5km/rcp85/01/clt/day/v20210615/*20[678]*-20[678]*.nc"
-    spec2 = "/badc/ukcp18/data/land-cpm/uk/5km/rcp85/01/clt/day/v20210615"
-    spec3 = "/badc/cmip6/data/CMIP6/CMIP/MOHC/HadGEM3-GC31-MM/historical/r1i1p1f3/6hrPlev/tas/gn/v20200923"
-    spec4 = "/badc/cmip6/data/CMIP6/CFMIP/MOHC/HadGEM3-GC31-LL/piSST/r1i1p1f3/AERmon/so2/gn/v20200403"
-    spec5 = "/badc/cordex/data/cordex/output/EUR-11/MOHC/CNRM-CERFACS-CNRM-CM5/historical/r1i1p1/MOHC-HadREM3-GA7-05/v2/3hr/clt/v20201111"
-    
-    for spec in (spec1, spec2, spec3, spec4, spec5):
-        print(f"[INFO] Running with spec: {spec}") 
-        resp = main(spec)
-        pprint.pprint(resp)
 
-        print("Pausing for...: ", end="")
-        for sleep in range(10, -1, -1):
-            print(f"{sleep}", end=" ")
-            sys.stdout.flush()
-            time.sleep(1)
-            
-        print()
+    if len(sys.argv) > 1:
+        # if arguments provided, call netcdf2stac to consume them
+        netcdf2stac()
+    else:
+
+        import pprint, time
+        spec1 = "/home/dev/data/regrid/analysed_sst/2022/01/01/"
+
+        for spec in (spec1,):
+            print(f"[INFO] Running with spec: {spec}")
+            resp = main(spec)
+            pprint.pprint(resp)
+
+            print("Pausing for...: ", end="")
+            for sleep in range(10, -1, -1):
+                print(f"{sleep}", end=" ")
+                sys.stdout.flush()
+                time.sleep(1)
+
+            print()
 
