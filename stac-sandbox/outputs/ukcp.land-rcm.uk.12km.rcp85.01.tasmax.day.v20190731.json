@@ -1,6 +1,6 @@
 {
     "properties": {
-        "collection": "land-rcm",
+        "sub_collection": "land-rcm",
         "domain": "uk",
         "frequency": "day",
         "institution": "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK.",

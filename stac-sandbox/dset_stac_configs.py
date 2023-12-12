@@ -35,7 +35,8 @@ configs = {
     "global_attrs": ['collection', 'domain', 'frequency', 'institution', 
                      'institution_id', 'project', 'references', 'resolution', 'scenario', 
                      'version', 'Conventions'],
-    "global_attr_map": {},
+    "global_attr_map": {
+       "collection": "sub_collection"},
     "templated_properties": {}
   },
 

@@ -212,11 +212,14 @@ def get_item_dict(spec):
     # Add normal file assets
     assets.update( {os.path.basename(fpath): get_asset_dict(fpath, bbox, level) for fpath in fpaths} )
 
+    start = ff.get_datetime(0)
+    end = fl.get_datetime(-1)
+
     d = {
         "properties": ff.get_properties(),
         "bbox": bbox,
-        "start_datetime": ff.get_datetime(0),
-        "end_datetime": fl.get_datetime(-1),
+        "start_datetime": start,
+        "end_datetime": end,
         "level": level,
         "file_count": len(assets), 
         "total_size": sum([asset["size"] for asset in assets.values()]),
