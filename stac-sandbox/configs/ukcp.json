@@ -1,12 +1,10 @@
 {
-    "variable": "analysed_sst",
-    "dataset_id": "???",
-    "base_dir": "/home/dev/data/regrid",
+    "base_dir": "/badc/ukcp18/data",
     "access_control": {
        "rule": "open",
        "roles": []
     },
-    "metadata_dir": "/home/dev/data/regrid/sst-metadata/",
+    "metadata_dir": "/badc/ukcp18/metadata",
     "kerchunk": {
       "dir_depth": {
         "by_dset": 4
@@ -26,8 +24,8 @@
         "roles": ["data"]
       }
     },
-    "global_attrs": ["collection", "domain", "frequency", "institution",
-                     "institution_id", "project", "references", "resolution", "scenario",
+    "global_attrs": ["collection", "domain", "frequency", "institution", 
+                     "institution_id", "project", "references", "resolution", "scenario", 
                      "version", "Conventions"],
     "global_attr_map": {},
     "templated_properties": {}

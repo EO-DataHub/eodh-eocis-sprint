@@ -1,0 +1,232 @@
+{
+    "properties": {
+        "collection": "land-rcm",
+        "domain": "uk",
+        "frequency": "day",
+        "institution": "Met Office Hadley Centre (MOHC), FitzRoy Road, Exeter, Devon, EX1 3PB, UK.",
+        "institution_id": "MOHC",
+        "project": "UKCP18",
+        "references": "https://ukclimateprojections.metoffice.gov.uk",
+        "resolution": "12km",
+        "scenario": "rcp85",
+        "version": "v20190731",
+        "Conventions": "CF-1.5",
+        "latest": true,
+        "variable_id": "tasmax",
+        "variable_long_name": "Maximum air temperature",
+        "variable_units": "degC",
+        "cf_standard_name": "air_temperature",
+        "dataset_id": "ukcp.land-rcm.uk.12km.rcp85.01.tasmax.day.v20190731"
+    },
+    "bbox": [
+        -18.24145632530888,
+        -0.8710618968191547,
+        -6.580251255557555,
+        12.94984143216418
+    ],
+    "start_datetime": "1980-12-01T12:00:00",
+    "end_datetime": "2080-11-30T12:00:00",
+    "level": null,
+    "file_count": 11,
+    "total_size": 1334000632,
+    "version": "v20190731",
+    "access_control": {
+        "rule": "open",
+        "roles": []
+    },
+    "assets": {
+        "reference_file": {
+            "checksum": "a40b6a08c6ae8bf9408fda3e4baf83a002eb21af7f725a7de527ebbb4991a59b",
+            "checksum_type": "SHA256",
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/metadata/kerchunk/by_dset/ukcp/land-rcm/uk/12km/ukcp.land-rcm.uk.12km.rcp85.01.tasmax.day.v20190731.zstd",
+            "roles": [
+                "reference"
+            ],
+            "size": 248942,
+            "type": "application/zstd",
+            "open_zarr_kwargs": {
+                "decode_times": true
+            }
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_19801201-19901130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_19801201-19901130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "1980-12-01T00:00:00/1990-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_19901201-20001130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_19901201-20001130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "1990-12-01T00:00:00/2000-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20001201-20101130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20001201-20101130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2000-12-01T00:00:00/2010-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20101201-20201130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20101201-20201130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2010-12-01T00:00:00/2020-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20201201-20301130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20201201-20301130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2020-12-01T00:00:00/2030-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20301201-20401130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20301201-20401130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2030-12-01T00:00:00/2040-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20401201-20501130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20401201-20501130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2040-12-01T00:00:00/2050-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20501201-20601130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20501201-20601130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2050-12-01T00:00:00/2060-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20601201-20701130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20601201-20701130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2060-12-01T00:00:00/2070-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        },
+        "tasmax_rcp85_land-rcm_uk_12km_01_day_20701201-20801130.nc": {
+            "href": "https://dap.ceda.ac.uk/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_20701201-20801130.nc",
+            "size": 133375169,
+            "area": [
+                -18.24145632530888,
+                -0.8710618968191547,
+                -6.580251255557555,
+                12.94984143216418
+            ],
+            "time": "2070-12-01T00:00:00/2080-11-30T23:59:59",
+            "level": null,
+            "checksum": null,
+            "checksum_type": null,
+            "type": "application/netcdf",
+            "roles": [
+                "data"
+            ]
+        }
+    }
+}

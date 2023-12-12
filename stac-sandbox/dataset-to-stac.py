@@ -196,7 +196,8 @@ def get_item_dict(spec):
         while not os.path.isdir(dr): dr = os.path.dirname(dr)
  
     config = config_from_path(dr)
-    var_id = "analysed_sst" # var_from_dir(dr, config)
+#    var_id = "analysed_sst" # var_from_dir(dr, config)
+    var_id = var_from_dir(dr, config)
     dset_id = dir_to_dset_id(dr)
 
     # ff and fl are file:first and file:last
@@ -330,6 +331,7 @@ if __name__ == "__main__":
 
         import pprint, time
         spec1 = "/home/dev/data/regrid/analysed_sst/2022/01/01/"
+        spec1 = "/badc/ukcp18/data/land-rcm/uk/12km/rcp85/01/tasmax/day/v20190731/tasmax_rcp85_land-rcm_uk_12km_01_day_*.nc"
 
         for spec in (spec1,):
             print(f"[INFO] Running with spec: {spec}")
