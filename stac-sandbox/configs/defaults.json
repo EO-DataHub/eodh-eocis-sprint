@@ -1,0 +1,8 @@
+{
+  "access_control": {
+    "rule": "restricted",
+    "roles": [
+      "reguser"
+    ]
+  }
+}

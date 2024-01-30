@@ -17,18 +17,15 @@ import os
 import glob
 import hashlib
 import json
+import uuid
 
 import xarray as xr
-import cf_xarray as cfxr
 
 sys.path.append(".")
-from dset_stac_configs import configs
-DEFAULTS = configs["DEFAULTS"]
 
 SERVICE_URL = "https://dap.ceda.ac.uk"
 KERCHUNK_URL = "https://dap.ceda.ac.uk"
 OUTPUTS_DIR = "./outputs"
-
 
 def expand_timestring(t, end=False):
     tmpl = "00001231235959" if end else "00000101000000"
@@ -46,7 +43,7 @@ def time_from_fname(fname):
     return "/".join(time_comps)
  
 
-def get_asset_dict(fpath, bbox, level, config=None):
+def get_asset_dict(fpath, bbox, level, config):
     d = {
         "href": f"{SERVICE_URL}{fpath}",
         "size": os.path.getsize(fpath),
@@ -55,8 +52,6 @@ def get_asset_dict(fpath, bbox, level, config=None):
         "level": level
     }  
 
-    if config is None:
-        config = config_from_path(fpath)
     d.update(config["defaults"]["asset"])
     return d
 
@@ -64,23 +59,9 @@ def get_asset_dict(fpath, bbox, level, config=None):
 def floats(seq):
     return [float(x) for x in seq]
 
-def proj_from_path(fpath, return_config=False):
-    for proj, content in configs.items():
-        if proj == "DEFAULTS": continue
-        if fpath.startswith(content["base_dir"]): 
-            if return_config:
-                return configs[proj]
-            return proj
-
-    raise KeyError(f"No project matched for: {fpath}") 
-
-def config_from_path(fpath):
-    return proj_from_path(fpath, return_config=True)
-
-
 class NCFileInspector:
-    def __init__(self, fpath, var_id, config=None):
-        self.config = config if config else config_from_path(fpath)
+    def __init__(self, fpath, var_id, config):
+        self.config = config
         self.ds = xr.open_dataset(fpath)
         self.var_id = var_id
         self.var = self.ds[var_id]
@@ -127,7 +108,19 @@ class NCFileInspector:
 
         return None 
   
-    def get_bbox(self): 
+    def get_bbox(self):
+        # use the geopspatial min/max metdata if present
+        geospatial_lat_min = self.ds.attrs.get("geospatial_lat_min", None)
+        geospatial_lat_max = self.ds.attrs.get("geospatial_lat_max", None)
+        geospatial_lon_min = self.ds.attrs.get("geospatial_lon_min", None)
+        geospatial_lon_max = self.ds.attrs.get("geospatial_lon_max", None)
+        metadata_valid = True
+        for v in [geospatial_lat_min, geospatial_lon_min, geospatial_lat_max, geospatial_lon_max]:
+            if v is None:
+                metadata_valid = False
+        if metadata_valid:
+            return floats([geospatial_lon_min, geospatial_lat_min, geospatial_lon_max, geospatial_lat_max])
+        # otherwise, extract from the data
         lt = self.ds.cf["latitude"]
         ln = self.ds.cf["longitude"]
         return floats([ln.min(), lt.min(), ln.max(), lt.max()])
@@ -140,25 +133,13 @@ class NCFileInspector:
             return None
 
 
-def dir_to_dset_id(dr):
-    config = config_from_path(dr)
-    return config.get("dset_id_prefix", "") + \
-           dr.replace(config["base_dir"], "").strip("/").replace("/", ".") + \
-           config.get("dset_id_suffix", "")
-
-def get_a_or_b(key, a, b):
-    "Get item from `key` in dict `a`, or `b`."
-    return a.get(key, b[key])
-
 
 def get_access_control(config):
-    ac = "access_control"
-    dfac = DEFAULTS[ac]
-    dsac = config.get(ac, dfac)
+    dsac = config["access_control"]
 
     return {   # because the same for all Assets in this Item
-      "rule": get_a_or_b("rule", dsac, dfac),
-      "roles": get_a_or_b("roles", dsac, dfac)
+      "rule": dsac["rule"],
+      "roles": dsac["roles"]
     }
 
 
@@ -183,89 +164,59 @@ def get_kerchunk_asset(dset_id, dr, config):
        }
     }
       
-
-def get_item_dict(spec):
-    if os.path.isdir(spec):
-        dr = spec
-        fnames = sorted(os.listdir(dr))
-        fpaths = [os.path.join(dr, fname) for fname in fnames]
-    else:
-        fpaths = sorted(glob.glob(spec))
-        fnames = [os.path.basename(fpath) for fpath in fpaths]
-        dr = os.path.commonprefix(fpaths).rstrip("/")
-        while not os.path.isdir(dr): dr = os.path.dirname(dr)
- 
-    config = config_from_path(dr)
-    var_id = "analysed_sst" # var_from_dir(dr, config)
-    dset_id = dir_to_dset_id(dr)
-
-    # ff and fl are file:first and file:last
-    ff, fl = [NCFileInspector(fpath, var_id) for fpath in [fpaths[0], fpaths[-1]]]
-
-    # Get bbox and level first so that we can insert them into the assets
-    bbox = ff.get_bbox()
-    level = ff.get_level()
-
-    # Build asset list - start with kerchunk asset
-    assets = get_kerchunk_asset(dset_id, dr, config)
-    # Add normal file assets
-    assets.update( {os.path.basename(fpath): get_asset_dict(fpath, bbox, level) for fpath in fpaths} )
-
-    d = {
-        "properties": ff.get_properties(),
-        "bbox": bbox,
-        "start_datetime": ff.get_datetime(0),
-        "end_datetime": fl.get_datetime(-1),
-        "level": level,
-        "file_count": len(assets), 
-        "total_size": sum([asset["size"] for asset in assets.values()]),
-        "version": version_from_dir(dr),
-        "access_control": get_access_control(config),
-        "assets": assets
+def get_geometry(bbox):
+    lon_min = bbox[0]
+    lat_min = bbox[1]
+    lon_max = bbox[2]
+    lat_max = bbox[3]
+    return {
+        "type": "Polygon",
+        "coordinates": [
+            [[lon_min, lat_min], [lon_max, lat_min], [lon_max, lat_max], [lon_min, lat_max], [lon_min, lat_min]]
+        ]
     }
 
-    # Add dataset ID
-    d["properties"][config["dset_id_name"]] = dset_id
-
-    # Add templated properties
-    for prop, tmpl in config["templated_properties"].items():
-        d["properties"][prop] = tmpl.format(**vars())
-
-    return dset_id, d
-
-def var_from_dir(dr, config):
-    return dr.strip("/").split("/")[config["var_id_index_in_dset_id"]]
-
-
-def version_from_dir(dr):
-    return dr.strip("/").split("/")[-1]
-
-
-def main(spec):
-    dset_id, item = get_item_dict(spec)
-    dset_item_file = f"{OUTPUTS_DIR}/{dset_id}.json"
-    
-    with open(dset_item_file, "w") as writer:
-        json.dump(item, writer, indent=4, sort_keys=False)
-
-    print(f"Wrote STAC Item file to: {dset_item_file}")
-    return item 
 
 class Netcdf2Stac:
 
-    def __init__(self, input_path, config_path, output_path):
+    def __init__(self, input_path, config_paths, output_path, item_id=None):
         self.input_path = input_path
-        self.config_path = config_path
+        self.config_paths = config_paths
         self.output_path = output_path
+        self.item_id = item_id
 
-        with open(self.config_path) as f:
-            self.config = json.loads(f.read())
+
+        def merge(d1, d2):
+            # recursively merge configurations d1 and d2, give d2 priority
+            if d2 is None:
+                return d1
+            if d1 is None:
+                return d2
+            if isinstance(d1,list) and isinstance(d2,list):
+                return d1+d2
+            if isinstance(d1,dict) and isinstance(d2,dict):
+                all_keys = list(set(list(d1.keys())+list(d2.keys())))
+                merged = {}
+                for k in all_keys:
+                    merged[k] = merge(d1.get(k,None),d2.get(k,None))
+                return merged
+            # fallback, ignore d1, return d2
+            return d2
+
+        self.config = {}
+        for config_path in self.config_paths:
+            with open(config_path) as f:
+                self.config = merge(self.config,json.loads(f.read()))
 
     def run(self):
 
         if os.path.isdir(self.input_path):
-            fnames = sorted(os.listdir(self.input_path))
-            fpaths = [os.path.join(self, fname) for fname in fnames]
+            fpaths = []
+            for root, folders, files in os.walk(self.input_path):
+                for file in files:
+                    if file.endswith(".nc"):
+                        fpaths.append(os.path.join(root,file))
+            fpaths = sorted(fpaths)
         else:
             fpaths = [self.input_path]
 
@@ -284,18 +235,41 @@ class Netcdf2Stac:
         # Add normal file assets
         assets.update({os.path.basename(fpath): get_asset_dict(fpath, bbox, level, self.config) for fpath in fpaths})
 
+        # work out the identifier for this STAC item
+        item_id = self.item_id
+
+        # if not passed explicitly...
+        if self.item_id is None:
+            if len(fpaths) == 1:
+                # try to get id from the file
+                if "file_id_attribute" in self.config:
+                    item_id = ff.global_attr(self.config["file_id_attribute"])
+
+        # fallback to creating a new id
+        if item_id is None:
+            # make up a new unique id
+            item_id = str(uuid.uuid4())
+
+        # define the top-level attributes of the item
         d = {
+            "stac_version": "1.0.0",
+            "stac_extensions": [],
+            "type": "Feature",
             "properties": ff.get_properties(),
             "bbox": bbox,
+            "geometry": get_geometry(bbox),
+            "id": item_id
+        }
+
+        d["properties"].update(**{
             "start_datetime": ff.get_datetime(0),
             "end_datetime": fl.get_datetime(-1),
             "level": level,
             "file_count": len(assets),
             "total_size": sum([asset["size"] for asset in assets.values()]),
-            "version": version_from_dir(self.input_path),
             "access_control": get_access_control(self.config),
             "assets": assets
-        }
+        })
 
         # Add dataset ID
         d["properties"][self.config["dset_id_name"]] = dset_id
@@ -313,34 +287,16 @@ def netcdf2stac():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("input_path",help="path to netcdf4 file or folder")
-    parser.add_argument("config_path", help="path to JSON configuration file")
     parser.add_argument("output_path", help="path to output stac file")
 
+    parser.add_argument("--config-path", nargs="+", help="path to JSON configuration file(s)", required=True)
+    parser.add_argument("--id", type=str, help="supply an id for the STAC item", required=False, default=None)
+
     args = parser.parse_args()
-    converter = Netcdf2Stac(args.input_path, args.config_path, args.output_path)
+    converter = Netcdf2Stac(args.input_path, args.config_path, args.output_path, args.id)
     converter.run()
 
 if __name__ == "__main__":
+    netcdf2stac()
 
-
-    if len(sys.argv) > 1:
-        # if arguments provided, call netcdf2stac to consume them
-        netcdf2stac()
-    else:
-
-        import pprint, time
-        spec1 = "/home/dev/data/regrid/analysed_sst/2022/01/01/"
-
-        for spec in (spec1,):
-            print(f"[INFO] Running with spec: {spec}")
-            resp = main(spec)
-            pprint.pprint(resp)
-
-            print("Pausing for...: ", end="")
-            for sleep in range(10, -1, -1):
-                print(f"{sleep}", end=" ")
-                sys.stdout.flush()
-                time.sleep(1)
-
-            print()
 

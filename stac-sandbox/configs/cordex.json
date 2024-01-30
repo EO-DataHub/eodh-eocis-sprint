@@ -1,0 +1,63 @@
+{
+  "base_dir": "/badc/cordex/data",
+  "access_control": {
+    "rule": "restricted",
+    "roles": [
+      "cordex"
+    ]
+  },
+  "metadata_dir": "/badc/cordex/metadata",
+  "kerchunk": {
+    "dir_depth": {
+      "by_dset": 5
+    }
+  },
+  "dset_id_name": "instance_id",
+  "var_id_index_in_dset_id": -2,
+  "defaults": {
+    "item": {
+      "access": [
+        "HTTPServer"
+      ],
+      "index_node": null,
+      "latest": true,
+      "pid": null,
+      "replica": false,
+      "retracted": false
+    },
+    "asset": {
+      "checksum": null,
+      "checksum_type": null,
+      "type": "application/netcdf",
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "global_attrs": [
+    "CORDEX_domain",
+    "driving_model_id",
+    "driving_model_ensemble_member",
+    "experiment_id",
+    "experiment_familys",
+    "institute_id",
+    "product",
+    "project_id",
+    "rcm_version_id",
+    "frequency",
+    "driving_experiment_name",
+    "model_id"
+  ],
+  "global_attr_map": {
+    "CORDEX_domain": "domain",
+    "driving_model_id": "driving_model",
+    "frequency": "time_frequency",
+    "rcm_version_id": "rcm_version",
+    "experiment_id": "experiment",
+    "project_id": "project",
+    "institute_id": "institute",
+    "driving_model_ensemble_member": "ensemble",
+    "model_id": "rcm_name"
+  },
+  "templated_properties": {}
+}
