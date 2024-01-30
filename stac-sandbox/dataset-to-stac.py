@@ -133,7 +133,6 @@ class NCFileInspector:
             return None
 
 
-
 def get_access_control(config):
     dsac = config["access_control"]
 
