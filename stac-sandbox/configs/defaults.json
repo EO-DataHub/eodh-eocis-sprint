@@ -4,5 +4,8 @@
     "roles": [
       "reguser"
     ]
-  }
+  },
+  "service_url": "https://dap.ceda.ac.uk/",
+  "kerchunk_url": "https://dap.ceda.ac.uk"
+
 }

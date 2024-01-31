@@ -10,6 +10,14 @@ Map netcdf4 files to STAC items, guided by one or more configuration files
 
 Requires xarray and netcdf4 python libraries
 
+Suggested environment:
+
+```
+conda create -n stac_env python=3.10
+conda activate stac_env
+conda install xarray cf_xarray netcdf4 pystac
+```
+
 ## running
 
 Download the dataset-to-stac.py script and any required configuration files from the config folder
@@ -42,10 +50,17 @@ note that if multiple configuration files are supplied, they are merged, with la
 
 Each configuration file is a JSON formatted dictionary, with the following keys (incomplete)
 
-| key                | purpose                                                                 |
-|--------------------|-------------------------------------------------------------------------|
-| file_id_attribute  | global attribute in input that provides a file-unique identifier string |
-| global_attrs       | a list of global attributes to copy into the STAC item properties       |
+| key                 | purpose                                                                                                                                   |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+| file_id_attribute   | global attribute in each input file that provides a file-unique identifier string                                                         |
+| global_attrs        | a list of global attributes to copy into the STAC item properties                                                                         |
+| global_attr_map    | a dictionary mapping dataset global attribute names to STAC item property names                                                           |
+| service_url         | root URL for serving files, to which the filenames are appended <br/> {year}, {month} and {day} are expanded using python's format method |
+| kerchunk_url        | root URL for kerchunk                                                                                                                     |
+| variable            | a reference variable that can be used to obtain the spatial and temporal extent                                                           |
+| dataset_id          | the name of the dataset                                                                                                                   |
+ | defaults=>item      | a dictionary containing metatdata to add to each STAC item properties                                                                     |
+ | kerchunk           | dictionary describing kerchunk configuration (TBC)                                                                                        |
 
 
 

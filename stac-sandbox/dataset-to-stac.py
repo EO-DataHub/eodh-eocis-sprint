@@ -11,7 +11,7 @@ Dependencies:
 - cf_xarray
 
 """
-
+import datetime
 import sys
 import os
 import glob
@@ -20,37 +20,27 @@ import json
 import uuid
 
 import xarray as xr
+import cf_xarray as cfxr
 
 sys.path.append(".")
 
-SERVICE_URL = "https://dap.ceda.ac.uk"
-KERCHUNK_URL = "https://dap.ceda.ac.uk"
-OUTPUTS_DIR = "./outputs"
 
-def expand_timestring(t, end=False):
-    tmpl = "00001231235959" if end else "00000101000000"
-    return t + tmpl[len(t):]
+def expand_dt_template(s, dt):
+    return s.format(**{
+        "year": dt.year,
+        "month": dt.month,
+        "day": dt.day
+    })
    
-        
-def time_from_fname(fname):
-    # TODO: Need a check to handle files with no time component
-    t_comps = fname.split(".")[-2].split("_")[-1].split("-")
-    time_comps = [expand_timestring(t_comps[0])]
-    if len(t_comps) > 1:
-        time_comps.append(expand_timestring(t_comps[1], end=True))
-         
-    time_comps = [f"{t[:4]}-{t[4:6]}-{t[6:8]}T{t[8:10]}:{t[10:12]}:{t[12:14]}" for t in time_comps]
-    return "/".join(time_comps)
- 
 
-def get_asset_dict(fpath, bbox, level, config):
+def get_asset_dict(fpath, bbox, level, config, dt):
     d = {
-        "href": f"{SERVICE_URL}{fpath}",
+        "href": f"{expand_dt_template(config['service_url'],dt)}{fpath}",
         "size": os.path.getsize(fpath),
         "area": bbox,
-        "time": time_from_fname(fpath),
+        "time": dt.isoformat(),
         "level": level
-    }  
+    }
 
     d.update(config["defaults"]["asset"])
     return d
@@ -90,18 +80,16 @@ class NCFileInspector:
 
             props[key] = value
 
-        props.update(self.config["defaults"]["item"])
-
-        var_props = self.get_var_props()
-        props.update(var_props)
         return props 
 
     def get_datetime(self, index):
         try:
             return self.ds.time.values[index].isoformat()
         except Exception as exc:
-            try: 
+            try:
                 # For np.datetime64 objects
+                # YYYY-MM-DDTHH:MM:SS
+
                 return str(self.ds.time.values[index]).split(".")[0]
             except Exception as exc2:
                 pass
@@ -147,10 +135,9 @@ def sha256(fpath):
     content = open(fpath, "rb").read() if os.path.isfile(fpath) else fpath.encode("utf-8")
     return hashlib.sha256(content).hexdigest()
 
-def get_kerchunk_asset(dset_id, dr, config):
-    extra_dirs = "/".join(dset_id.split(".")[:config['kerchunk']['dir_depth']['by_dset']])
-    kc_path = f"{config['metadata_dir']}/kerchunk/by_dset/{extra_dirs}/{dset_id}.zstd"
-    kc_uri = f"{KERCHUNK_URL}{kc_path}"
+def get_kerchunk_asset(dset_id, config):
+    kc_path = f"{config['metadata_dir']}/kerchunk/by_dset/{dset_id}.zstd"
+    kc_uri = f"{config['kerchunk_url']}/{kc_path}"
 
     return {"reference_file":
        {"checksum": sha256(kc_path),
@@ -230,9 +217,14 @@ class Netcdf2Stac:
         level = ff.get_level()
 
         # Build asset list - start with kerchunk asset
-        assets = get_kerchunk_asset(dset_id, self.input_path, self.config)
+        assets = {} # get_kerchunk_asset(dset_id, self.config)
         # Add normal file assets
-        assets.update({os.path.basename(fpath): get_asset_dict(fpath, bbox, level, self.config) for fpath in fpaths})
+
+        for fpath in fpaths:
+            i = NCFileInspector(fpath, var_id, self.config)
+            dt = datetime.datetime.fromisoformat(i.get_datetime(0))
+            asset = get_asset_dict(fpath, bbox, level, self.config, dt)
+            assets.update({os.path.basename(fpath):asset})
 
         # work out the identifier for this STAC item
         item_id = self.item_id
@@ -252,18 +244,21 @@ class Netcdf2Stac:
         # define the top-level attributes of the item
         d = {
             "stac_version": "1.0.0",
-            "stac_extensions": [],
+            "stac_extensions": ["https://stac-extensions.github.io/cf/v0.2.0/schema.json"],
             "type": "Feature",
-            "properties": ff.get_properties(),
+            "properties": self.config.get("defaults",{}).get("item",{}),
             "bbox": bbox,
             "geometry": get_geometry(bbox),
             "id": item_id
         }
 
-        d["properties"].update(**{
+        print(d["properties"])
+
+        d["properties"].update(ff.get_properties())
+
+        d["properties"].update({
             "start_datetime": ff.get_datetime(0),
             "end_datetime": fl.get_datetime(-1),
-            "level": level,
             "file_count": len(assets),
             "total_size": sum([asset["size"] for asset in assets.values()]),
             "access_control": get_access_control(self.config),
@@ -278,7 +273,7 @@ class Netcdf2Stac:
             d["properties"][prop] = tmpl.format(**vars())
 
         with open(self.output_path,"w") as f:
-            f.write(json.dumps(d))
+            f.write(json.dumps(d,indent=4))
 
 
 def netcdf2stac():
